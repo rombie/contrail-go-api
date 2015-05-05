@@ -104,7 +104,11 @@ func (obj *ObjectBase) GetHref() string {
 func (obj *ObjectBase) SetFQName(parentType string, fqn []string) {
 	obj.fq_name = fqn
 	obj.name = fqn[len(fqn)-1]
-	obj.parent_type = parentType
+	if (len(parent_type) > 0) {
+		obj.parent_type = parentType
+	} else {
+		obj.parent_type = obj.GetDefaultParent()
+	}
 }
 
 func (obj *ObjectBase) GetFQName() []string {
