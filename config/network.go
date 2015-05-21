@@ -150,7 +150,7 @@ func CreateNetworkWithSubnet(
 
     if (name == "Public") {
         floatingip_pool := types.FloatingIpPool{}
-        floatingip_pool.setName("Public")
+        floatingip_pool.SetName("Public")
         project.AddFloatingIpPool(floatingip_pool)
     }
 	err = client.Create(net)
