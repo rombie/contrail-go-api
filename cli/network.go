@@ -115,6 +115,28 @@ func networkCreateUsage(argument *flag.FlagSet) func() {
 	}
 }
 
+func floatingipPoolkCreate(
+    client *contrail.Client, name string, net_uuid string) {
+
+    if (name != "Public")
+        return
+
+    obj, err := client.FindByUuid("virtual-network", net_uuid)
+	if err != nil {
+    	fmt.Fprintln(os.Stderr, err)
+    	os.Exit(1)
+    }
+    floatingip_pool := types.FloatingIpPool{}
+    floatingip_pool.SetName("Public")
+    floatingip_pool.SetParent(obj.(*types.VirtualNetwork))
+    // project.AddFloatingIpPool(&floatingip_pool)
+    err = client.Create(floatingip_pool)
+	if err != nil {
+    	fmt.Fprintln(os.Stderr, err)
+    	os.Exit(1)
+    }
+}
+
 func networkCreate(client *contrail.Client, flagSet *flag.FlagSet) {
 	if flagSet.NArg() < 1 {
 		flagSet.Usage()
@@ -131,11 +153,12 @@ func networkCreate(client *contrail.Client, flagSet *flag.FlagSet) {
 	}
 
 	if len(networkCreateOpts.subnet) > 0 {
-		config.CreateNetworkWithSubnet(client, parent_id, name,
+		net_uuid, err = config.CreateNetworkWithSubnet(client, parent_id, name,
 			networkCreateOpts.subnet)
 	} else {
-		config.CreateNetwork(client, parent_id, name)
+		net_uuid, err = config.CreateNetwork(client, parent_id, name)
 	}
+    floatingipPoolkCreate(client, name, net_uuid)
 }
 
 func networkNameOrIdUsage(argument *flag.FlagSet) func() {
