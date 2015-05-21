@@ -160,6 +160,10 @@ func networkCreate(client *contrail.Client, flagSet *flag.FlagSet) {
 	} else {
 		net_uuid, err = config.CreateNetwork(client, parent_id, name)
 	}
+	if err != nil {
+		fmt.Fprint(os.Stderr, err)
+		os.Exit(1)
+	}
     floatingipPoolCreate(client, name, net_uuid)
 }
 
