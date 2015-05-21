@@ -147,6 +147,12 @@ func CreateNetworkWithSubnet(
 		&types.IpamSubnetType{
 			Subnet: &types.SubnetType{address, prefixlen}})
 	net.AddNetworkIpam(ipam, subnets)
+
+    if (name == "Public") {
+        floatingip_pool := types.FloatingIpPool{}
+        floatingip_pool.setName("Public")
+        project.AddFloatingIpPool(floatingip_pool)
+    }
 	err = client.Create(net)
 	if err != nil {
 		return "", err
